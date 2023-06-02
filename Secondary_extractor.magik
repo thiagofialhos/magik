@@ -3,41 +3,41 @@
 # load_file("<path>\Secondary_extractor.magik")
 #% text_encoding = iso8859_1
 _block
-    #Local variables
-    #Getting environment name
-    _local vEmpresa << system.getenv("empresa")+"_"+system.getenv("APPLICATION_ENVIRONMENT")
+	#Local variables
+    	#Getting environment name
+    	_local vEmpresa << system.getenv("empresa")+"_"+system.getenv("APPLICATION_ENVIRONMENT")
 
-    #Creating log (csv) output file
+    	#Creating log (csv) output file
 	_local log_file << external_text_output_stream.new("\<path>\Secondary_Extractor_"+vEmpresa+".csv")
     
-    write("BOF: ",date_time.now())
+    	write("BOF: ",date_time.now())
 
-    #Creating log file header
-    log_file.write("Main_Conductor;Phase|Connected_Conductors;Phase",newline_char)    
+    	#Creating log file header
+    	log_file.write("Main_Conductor;Phase|Connected_Conductors;Phase",newline_char)    
 
-    #Looping over secondary network data
-    _for o _over ev.collections[:ed_oh_secondary_conductor].fast_elements()
-        _loop
-            _if o.usage = "<network_type>" #Checking record attribute value
-                _then
-                    log_file.write(o.id,";",o.phasing,"|")
-                    _try _with cond
-                        _for i _over o.route.all_connected_geometry().fast_elements()            
-                            _loop
-                                _if i.rwo.rwo_type _is :ed_oh_secondary_conductor _or i.rwo.rwo_type _is :ed_ug_secondary_conductor
-                                    _then     
-                                        _if i.rwo.usage = "<network_type>"
-                                            _then                       
-                                                log_file.write(i.rwo.id,";",i.rwo.phasing,newline_char) 
-                                            _endif        
-                                    _endif
-                        _endloop
-                    _when error
-                        log_file.write("Conductor: ",o.id,"-",cond)                                        
-                    _endtry
-                    log_file.newline()
-                _endif
-        _endloop
-        write("EOF: ",date_time.now())
+    	#Looping over secondary network data
+    	_for o _over ev.collections[:ed_oh_secondary_conductor].fast_elements()
+        	_loop
+            		_if o.usage = "<network_type>" #Checking record attribute value
+                		_then
+                    			log_file.write(o.id,";",o.phasing,"|")
+                    			_try _with cond
+                        		_for i _over o.route.all_connected_geometry().fast_elements()            
+                            			_loop
+                                			_if i.rwo.rwo_type _is :ed_oh_secondary_conductor _or i.rwo.rwo_type _is :ed_ug_secondary_conductor
+                                    				_then     
+                                        				_if i.rwo.usage = "<network_type>"
+                                            					_then                       
+                                                					log_file.write(i.rwo.id,";",i.rwo.phasing,newline_char) 
+                                            					_endif        
+                                    				_endif
+                        			_endloop
+                    			_when error
+                        			log_file.write("Conductor: ",o.id,"-",cond)                                        
+                    			_endtry
+                    			log_file.newline()
+                		_endif
+        	_endloop
+        	write("EOF: ",date_time.now())
 _endblock
 $

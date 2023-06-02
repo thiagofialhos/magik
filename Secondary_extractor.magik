@@ -28,7 +28,7 @@ _block
                                     _then     
                                         _if i.rwo.usage = "<network_type>"
                                             _then                       
-                                                log_file.write(i.rwo.id,";",i.rwo.phasing,"-") 
+                                                log_file.write(i.rwo.id,";",i.rwo.phasing,newline_char) 
                                             _endif        
                                     _endif
                         _endloop
